@@ -83,7 +83,9 @@ def generate_lines(n, abuse_ratio=None):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Generate some random application logs, useful to teach e.g. AWK."
+    )
     parser.add_argument(
         "--abuse-ratio",
         help="How many times on average an abuser will do a request per [abuse ratio] requests",

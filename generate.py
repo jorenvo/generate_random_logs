@@ -2,6 +2,7 @@
 import argparse
 import random
 from datetime import datetime, timedelta
+from scipy.stats import gamma
 
 
 def random_ip():
@@ -28,7 +29,7 @@ def endpoint():
 
 def generate_lines(n):
     fmt = "[{timestamp}] {ip} {endpoint} {time:.2f}"
-    max_time = 30
+    max_seconds = 100
     log_length = timedelta(days=30)
     end = datetime.now()
     begin = end - log_length
@@ -45,7 +46,7 @@ def generate_lines(n):
                 timestamp=timestamp,
                 ip=random_ip(),
                 endpoint=endpoint(),
-                time=random.uniform(0, max_time),
+                time=gamma.rvs(0.05, scale=max_seconds / 10),
             )
         )
 

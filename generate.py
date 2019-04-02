@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import random
+from collections import namedtuple
 from datetime import datetime, timedelta
 from scipy.stats import gamma
 
@@ -14,15 +15,17 @@ def random_ip():
     )
 
 
-def endpoint():
+def get_endpoint():
+    Endpoint = namedtuple("Endpoint", ["url", "gamma_shape"])
     return random.choice(
         (
-            "/user/status",
-            "/user/messages",
-            "/message/send",
-            "/money/send",
-            "/logout",
-            "/login",
+            Endpoint("/user/status", 0.05),
+            Endpoint("/user/messages", 0.10),
+            Endpoint("/message/send", 0.05),
+            Endpoint("/post/read", 0.05),
+            Endpoint("/export", 5),
+            Endpoint("/logout", 0.05),
+            Endpoint("/login", 0.15),
         )
     )
 
@@ -41,12 +44,13 @@ def generate_lines(n):
     ]
 
     for timestamp in sorted(timestamps):
+        endpoint = get_endpoint()
         output.append(
             fmt.format(
                 timestamp=timestamp,
                 ip=random_ip(),
-                endpoint=endpoint(),
-                time=gamma.rvs(0.05, scale=max_seconds / 10),
+                endpoint=endpoint.url,
+                time=gamma.rvs(endpoint.gamma_shape, scale=max_seconds / 10),
             )
         )
 
